@@ -1,0 +1,6 @@
+name: Hide'n'Seek
+version: 1.0.0
+main: me.elgamer.hidenseek.Main
+description: Hide'n'Seek gamemode for the Minigames Server, Original version by George112n
+depend: [Minigames]
+api-version: 1.16

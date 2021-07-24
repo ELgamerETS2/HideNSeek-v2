@@ -1,0 +1,14 @@
+#MySQL tables
+
+table:
+    maps:
+    stats:
+   
+#Lobby 
+world:
+spawn:
+    x:
+    y:
+    z:
+    yaw:
+    pitch:
