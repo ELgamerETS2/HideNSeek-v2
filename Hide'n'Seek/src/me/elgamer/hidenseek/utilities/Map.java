@@ -21,7 +21,7 @@ public class Map {
 	public long iWait;
 	
 	//Contructors
-	public HideAndSeekMap(int iMap)
+	public Map(int iMap)
 	{
 		this.iMapID = iMap;
 		this.spawnCoordinates = new double[3];
@@ -29,30 +29,13 @@ public class Map {
 		this.szLocation = "";
 	}
 	
-	public HideAndSeekMap()
+	public Map()
 	{
 		this.iMapID = 0;
 		this.spawnCoordinates = new double[3];
 		this.szCreator = "";
 		this.szLocation = "";
 		this.iWait = 0;
-	}
-	
-	public HideAndSeekMap(String szLocation, String szCreator, String szMapWorld, Location location, String szWait)
-	{
-		this.szLocation = szLocation;
-		this.szCreator = szCreator;
-		this.szMapWorld = szMapWorld;
-		this.spawnCoordinates = new double[3];
-		this.spawnCoordinates[0] = location.getBlockX();
-		this.spawnCoordinates[1] = location.getBlockY();
-		this.spawnCoordinates[2] = location.getBlockZ();
-		this.iWait = Integer.parseInt(szWait);
-	}
-	
-	public HideAndSeekMap(String szLocation)
-	{
-		this.szLocation = szLocation;
 	}
 	
 	//SQL setters

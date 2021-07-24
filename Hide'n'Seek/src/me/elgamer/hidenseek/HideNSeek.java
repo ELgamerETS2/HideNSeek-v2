@@ -11,7 +11,7 @@ public class HideNSeek extends JavaPlugin {
 	static HideNSeek instance;
 	static FileConfiguration config;
 	
-	String maps,stats;
+	public String maps,stats;
 	
 	public static Lobby lobby;
 	

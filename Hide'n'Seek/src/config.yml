@@ -12,3 +12,8 @@ spawn:
     z:
     yaw:
     pitch:
+    
+#Gameplayer
+speed:
+    seeker:
+    hider:

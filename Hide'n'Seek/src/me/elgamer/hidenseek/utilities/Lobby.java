@@ -11,7 +11,6 @@ import org.bukkit.scheduler.BukkitTask;
 
 import me.elgamer.hidenseek.HideNSeek;
 import me.elgamer.minigames.Main;
-import me.elgamer.minigames.utilities.User;
 
 public class Lobby {
 
@@ -20,15 +19,12 @@ public class Lobby {
 	public World world;
 	public ArrayList<Player> players;
 
-	//Stores amount of finders wanted
-	private int iFinders;
-
 	public boolean gameIsRunning;
 	private boolean gameIsStarting;
 	int iTimer;
 	boolean bTerminate;
 	BukkitTask Task;
-	
+
 	private Game game;
 
 
@@ -62,106 +58,81 @@ public class Lobby {
 		}, 0, 100L);
 	}
 
-	/*
-	private void reset()
-	{
-		//Reset finders to 0
-		this.iFinders = 0;
-
-		//Create the map
-		this.Map = new HideAndSeekMap();
-
-		//Reset the booleans
-		gameIsRunning = false;
-		gameIsStarting = false;
-
-		iTimer = 60;
-	}
-	 */
-
 	//Handles player attmepting to join the hide and seek lobby
-	public static void joinLobby(User u) {
+	public static void joinLobby(Player p) {
 
-		u.p.teleport(HideNSeek.lobby.spawn);
+		p.u.p.teleport(HideNSeek.lobby.spawn);
+		ArrayList<Player> players = HideNSeek.lobby.players;
 
 		//Adds player to the list
-		HideNSeek.lobby.players.add(new Player(u));
+		players.add(p);
 
 		//Send welcome message
-		u.p.sendMessage(ChatColor.LIGHT_PURPLE +"Welcome to the Hide'n'Seek lobby");
+		p.u.p.sendMessage(ChatColor.LIGHT_PURPLE +"Welcome to the Hide'n'Seek lobby");
 
-		/*
 		//Announces to all players that a player has joined the loobby
-		Announce.announce((Player[]) players.toArray(new Player[players.size()]), (ChatColor.DARK_PURPLE +player.getDisplayName() +ChatColor.LIGHT_PURPLE +" has joined the Hide and Seek lobby"));
+		Announce.announce(players, (ChatColor.DARK_PURPLE + p.u.p.getDisplayName() + ChatColor.LIGHT_PURPLE +" has joined the Hide and Seek lobby"));
 
 		//Announces the amount of players now in the lobby
-		if (players.size() == 1)
-			Announce.announce((Player[]) players.toArray(new Player[players.size()]), (ChatColor.LIGHT_PURPLE +""+players.size() +" player is now in the lobby"));
-		else
-			Announce.announce((Player[]) players.toArray(new Player[players.size()]), (ChatColor.LIGHT_PURPLE +""+players.size() +" players are now in the lobby"));
-		 */
+		if (players.size() == 1) {
+			Announce.announce(players, (ChatColor.LIGHT_PURPLE +""+players.size() +" player is now in the lobby"));
+		} else {
+			Announce.announce(players, (ChatColor.LIGHT_PURPLE +""+players.size() +" players are now in the lobby"));
+		}
 	}
 
 	//Deals with players leaving the lobby
 	public static void leaveLobby(Player p) {
-		
-		HideNSeek.lobby.players.remove(p);
+
+		ArrayList<Player> players = HideNSeek.lobby.players;
+		players.remove(p);
 		p.u.p.teleport(Main.lobby.spawn);
 		p.u.p.sendMessage(ChatColor.LIGHT_PURPLE +"You have left the Hide'n'Seek lobby");
-		
-		/*
-			//Announces that they have left
-			Announce.announce((Player[]) players.toArray(new Player[players.size()]), (ChatColor.DARK_PURPLE +player.getDisplayName() +ChatColor.LIGHT_PURPLE +" has left the Hide and Seek lobby"));
 
-			//Announces the amount of players now in the lobby
-			if (players.size() == 1)
-				Announce.announce((Player[]) players.toArray(new Player[players.size()]), (ChatColor.LIGHT_PURPLE +""+players.size() +" player in lobby"));
-			else
-				Announce.announce((Player[]) players.toArray(new Player[players.size()]), (ChatColor.LIGHT_PURPLE +""+players.size() +" players in lobby"));
+		//Announces that they have left
+		Announce.announce(players, (ChatColor.DARK_PURPLE + p.u.p.getDisplayName() + ChatColor.LIGHT_PURPLE +" has left the Hide and Seek lobby"));
 
-			*/
+		//Announces the amount of players now in the lobby
+		if (players.size() == 1) {
+			Announce.announce(players, (ChatColor.LIGHT_PURPLE + "" + players.size() + " player in lobby"));
+		} else {
+			Announce.announce(players, (ChatColor.LIGHT_PURPLE + "" + players.size() + " players in lobby"));
+		}
 	}
 
-	public void gameStartCountdown()
-	{
+	public void gameStartCountdown() {
+		
 		gameIsStarting = true;
 		iTimer = 60;
 		System.out.println("Game is starting, timer is 60");
 
-		Task = Bukkit.getScheduler().runTaskTimer(Main.getInstance(), new Runnable()
-		{
+		Task = Bukkit.getScheduler().runTaskTimer(Main.getInstance(), new Runnable() {
 			@Override
-			public void run()
-			{
-				if (gameIsRunning)
-				{
+			public void run() {
+				if (gameIsRunning) {
 					gameIsStarting = false;
 					Bukkit.getScheduler().cancelTask(Task.getTaskId());
 					return;
 				}
 
-				if (players.size() < Main.getInstance().getConfig().getInt("minimum"))
-				{
+				if (players.size() < Main.getInstance().getConfig().getInt("minimum")) {
 					gameIsStarting = false;
 					Bukkit.getScheduler().cancelTask(Task.getTaskId());
 					return;
 				}
 
-				if (iTimer == 0)
-				{
-					//Announce.announce(players, ChatColor.LIGHT_PURPLE +"Game starting now");
+				if (iTimer == 0) {
+					Announce.announce(players, ChatColor.LIGHT_PURPLE + "Game starting now");
 					iTimer = 60;
 					startGame();
 					Bukkit.getScheduler().cancelTask(Task.getTaskId());
 					return;
 				}
-				else if (iTimer % 10 == 0)
-				{
-					//Announce.announce(players, ChatColor.LIGHT_PURPLE +"Game starting in "+iTimer +" seconds");
+				else if (iTimer % 10 == 0) {
+					Announce.announce(players, ChatColor.LIGHT_PURPLE + "Game starting in " + iTimer + " seconds");
 				}
-				else if (iTimer < 10)
-				{
-					//Announce.announce(players, ChatColor.LIGHT_PURPLE +"Game starting in "+iTimer);
+				else if (iTimer < 10) {
+					Announce.announce(players, ChatColor.LIGHT_PURPLE + "Game starting in " + iTimer);
 				}
 
 				iTimer--;
@@ -170,15 +141,11 @@ public class Lobby {
 	}
 
 	//Triggers the game to start
-	public void startGame()
-	{
+	public void startGame() {
 		gameIsRunning = true;
 
-		//Sets finders to 1
-		iFinders = 1;
-
 		//Creates a new game and returns the gameID
-		//game = new Game((Player[]) players.toArray(new Player[players.size()]), iFinders, Map.iMapID, Main.getInstance(), this);
+		game = new Game(players);
 
 		//Resets player list
 		players.clear();
@@ -186,21 +153,19 @@ public class Lobby {
 		gameIsStarting = false;
 
 		//Starts the game running
-		//game.start();
+		game.startGame();
 	}
 
-	/*
 	//Deals with the game finishing
-	protected void gameFinished(Player[] exitingPlayers, ArrayList<HideAndSeekFinder> finders, boolean gameRan)
-	{
+	protected void gameFinished(ArrayList<Player> exitingPlayers, ArrayList<Player> seekers, boolean gameRan) {
 		//Adds players leaving game back into lobby players
 		//Resets their scoreboard
-		for (Player player : exitingPlayers)
+		for (Player p : exitingPlayers)
 		{
 			//Adds player to lobby
-			playerJoinLobby(player);
+			joinLobby(p);
 			//Resets their scoreboard
-			player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
+			p.u.p.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
 		}
 
 		//Sets game as not running
@@ -211,12 +176,11 @@ public class Lobby {
 		if (gameRan)
 		{
 			//Store game statistics
-			Statistics Statistics = new Statistics(CorePlugin);
-			Statistics.storeHideAndSeekPoints(finders, HideGame.game.getGameID());
+			//Statistics Statistics = new Statistics(CorePlugin);
+			//Statistics.storeHideAndSeekPoints(finders, HideGame.game.getGameID());
 		}
 
 		//Reset hide and seek game
-		HideGame.reset();
+		game = null;
 	}
-	*/
 }

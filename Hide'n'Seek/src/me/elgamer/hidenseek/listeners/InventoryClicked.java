@@ -42,7 +42,7 @@ public class InventoryClicked implements Listener {
 			}
 			
 			if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Hide'n'Seek")) {
-				Lobby.joinLobby(u);
+				Lobby.joinLobby(new me.elgamer.hidenseek.utilities.Player(u));
 			}
 			
 		}
