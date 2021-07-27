@@ -5,6 +5,7 @@ table:
     stats:
    
 #Lobby 
+game: HideAndSeek
 world:
 spawn:
     x:

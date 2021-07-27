@@ -25,7 +25,7 @@ public class Lobby {
 	boolean bTerminate;
 	BukkitTask Task;
 
-	private Game game;
+	public Game game;
 
 
 	public Lobby(FileConfiguration config) {

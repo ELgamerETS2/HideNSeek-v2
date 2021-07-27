@@ -17,9 +17,11 @@ import org.bukkit.scoreboard.Team;
 import me.elgamer.hidenseek.HideNSeek;
 import me.elgamer.hidenseek.listeners.DamageDone;
 import me.elgamer.hidenseek.listeners.MoveEvent;
-import me.elgamer.hidenseek.sql.GameData;
 import me.elgamer.hidenseek.sql.MapData;
 import me.elgamer.minigames.Main;
+import me.elgamer.minigames.sql.GameLog;
+import me.elgamer.minigames.sql.GameTable;
+import net.minecraft.server.v1_16_R3.GameTestHarnessLogger;
 
 public class Game {
 	public ArrayList<Player> players;
@@ -28,8 +30,9 @@ public class Game {
 	public int seekerCount;
 	public int iStartingHiders;
 	public Map map;
-	protected Location spawn;
+	public Location spawn;
 
+	public int gameID;
 	public int mapID;
 
 	private DamageDone DD;
@@ -37,7 +40,7 @@ public class Game {
 
 	private boolean registered;
 
-	protected boolean bTerminate;
+	public boolean bTerminate;
 	private boolean bGamePlayStarted;
 
 	//Scoreboard
@@ -45,9 +48,13 @@ public class Game {
 	protected Scoreboard SB;
 	protected Team TeamH;
 	protected Team TeamS;
-	protected Objective Found;
+	public Objective Found;
 	protected Objective Hiders;
 	protected Score score;
+
+	//Speed
+	public float seekerSpeed;
+	public float hiderSpeed;
 
 	public Game(ArrayList<Player> players) { //Input to be from lobby for whatever preferences are decided
 
@@ -86,6 +93,9 @@ public class Game {
 		Hiders.setDisplayName("Hiders");
 		Hiders.setDisplaySlot(DisplaySlot.SIDEBAR);
 		Hiders.setRenderType(RenderType.INTEGER);
+		
+		seekerSpeed = (float) HideNSeek.getInstance().getConfig().getDouble("speed.seeker");
+		hiderSpeed = (float) HideNSeek.getInstance().getConfig().getDouble("speed.hider");
 	}
 
 	public void startGame() {
@@ -264,6 +274,7 @@ public class Game {
 	private void game() {
 
 		HideNSeek instance = HideNSeek.getInstance();
+		gameID = GameLog.addGame(GameTable.getID(instance.game), mapID);
 		Announce.announce(players, (ChatColor.LIGHT_PURPLE + "The game has begun"));
 		Announce.announce(players, (ChatColor.LIGHT_PURPLE + "There are " + map.iWait + " seconds for hiders to hide"));
 
@@ -304,7 +315,7 @@ public class Game {
 
 				//Then allow hiders to be found
 				for (Player p : seekers) {
-					p.u.p.setWalkSpeed((float) instance.getConfig().getDouble("speed.seeker"));
+					p.u.p.setWalkSpeed(seekerSpeed);
 					p.u.p.setFlySpeed((float) 0.2);
 					for (Player h : hiders) {
 						h.u.p.showPlayer(instance, p.u.p);
@@ -313,7 +324,7 @@ public class Game {
 
 				//Sets the speed of hiders
 				for (Player p : hiders) {
-					p.u.p.setWalkSpeed((float) instance.getConfig().getDouble("speed.hider"));
+					p.u.p.setWalkSpeed(hiderSpeed);
 				}
 
 				Announce.announce(players, (ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "The seekers have been release"));
@@ -392,7 +403,7 @@ public class Game {
 			//Checks whether game play started (i.e game added to DB)
 			if (bGamePlayStarted) {
 				//Record end of game in database
-				GameData.storeGame(this);
+				GameLog.setGameEnd(gameID);
 			}
 
 			//Wait 6 seconds before sending players back to the lobby

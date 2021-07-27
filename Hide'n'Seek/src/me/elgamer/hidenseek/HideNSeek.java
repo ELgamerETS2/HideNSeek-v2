@@ -11,7 +11,7 @@ public class HideNSeek extends JavaPlugin {
 	static HideNSeek instance;
 	static FileConfiguration config;
 	
-	public String maps,stats;
+	public String maps,stats,game;
 	
 	public static Lobby lobby;
 	
@@ -26,6 +26,7 @@ public class HideNSeek extends JavaPlugin {
 		//MySQL table names
 		maps = config.getString("table.maps");
 		stats = config.getString("table.stats");
+		game = config.getString("game");
 		
 		//Create MySQL tables
 		Tables.createTables();

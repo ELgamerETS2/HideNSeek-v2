@@ -7,6 +7,8 @@ public class Player {
 	public boolean inGame;
 	public boolean inLobby;
 	
+	public int iFound;
+	
 	public User u;
 	
 	public Player(User u) {
@@ -17,7 +19,12 @@ public class Player {
 		this.inGame = false;
 		this.inLobby = true;
 		
+		iFound = 0;		
 		
+	}
+	
+	public void reset() {
+		iFound = 0;
 	}
 
 }
