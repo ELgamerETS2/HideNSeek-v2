@@ -5,11 +5,15 @@ import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitTask;
 
 import me.elgamer.hidenseek.HideNSeek;
+import me.elgamer.hidenseek.listeners.CommandListener;
 import me.elgamer.minigames.Main;
 
 public class Lobby {
@@ -23,6 +27,10 @@ public class Lobby {
 	private boolean gameIsStarting;
 	int iTimer;
 	boolean bTerminate;
+
+	public ItemStack leave;
+	ItemStack slot9;
+	
 	BukkitTask Task;
 
 	public Game game;
@@ -42,16 +50,36 @@ public class Lobby {
 
 		//Create a list of players
 		players = new ArrayList<Player>();
+		new CommandListener(this, HideNSeek.getInstance());
 
 		Bukkit.broadcastMessage(ChatColor.GREEN + "Created Hide'n'Seek lobby!");
+		
+		//Create gui item				
+		leave = new ItemStack(Material.SPRUCE_DOOR);
+		ItemMeta meta = leave.getItemMeta();
+		meta.setDisplayName(ChatColor.AQUA + "" + ChatColor.BOLD + "Leave Hide and Seek");
+		leave.setItemMeta(meta);
 
-		Bukkit.getScheduler().runTaskTimer(HideNSeek.getInstance(), new Runnable()
-		{
+		Bukkit.getScheduler().runTaskTimer(HideNSeek.getInstance(), new Runnable() {
 			@Override
-			public void run()
-			{
-				if (players.size() >= config.getInt("minimum") && !gameIsRunning && !gameIsStarting)
-				{
+			public void run() {
+				for (Player p : players) {
+					
+					slot9 = p.u.p.getInventory().getItem(8);
+
+					if (!(slot9 == null)) {
+						if (slot9.equals(leave)) {
+
+						} else {
+							p.u.p.getInventory().setItem(8, leave);
+						}
+					} else {
+						p.u.p.getInventory().setItem(8, leave);
+					}
+					
+				}
+				
+				if (players.size() >= config.getInt("minimum") && !gameIsRunning && !gameIsStarting){
 					gameStartCountdown();
 				}
 			}
@@ -147,6 +175,10 @@ public class Lobby {
 		//Creates a new game and returns the gameID
 		game = new Game(players);
 
+		for (Player p : players) {
+			p.u.p.getInventory().clear();
+		}
+		
 		//Resets player list
 		players.clear();
 

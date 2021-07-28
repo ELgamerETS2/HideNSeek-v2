@@ -3,6 +3,7 @@ package me.elgamer.hidenseek;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.elgamer.hidenseek.listeners.InventoryClicked;
 import me.elgamer.hidenseek.sql.Tables;
 import me.elgamer.hidenseek.utilities.Lobby;
 
@@ -32,8 +33,7 @@ public class HideNSeek extends JavaPlugin {
 		Tables.createTables();
 		
 		//Setup listeners
-		//new PlayerInteract(this);
-		//new InventoryClicked(this);
+		new InventoryClicked(this);
 		
 		lobby = new Lobby(config);
 		

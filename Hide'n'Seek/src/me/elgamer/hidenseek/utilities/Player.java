@@ -4,9 +4,6 @@ import me.elgamer.minigames.utilities.User;
 
 public class Player {
 	
-	public boolean inGame;
-	public boolean inLobby;
-	
 	public int iFound;
 	
 	public User u;
@@ -15,9 +12,6 @@ public class Player {
 		
 		this.u = u;
 		u.inLobby = false;
-		
-		this.inGame = false;
-		this.inLobby = true;
 		
 		iFound = 0;		
 		

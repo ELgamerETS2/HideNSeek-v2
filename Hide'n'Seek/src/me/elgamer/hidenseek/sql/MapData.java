@@ -52,7 +52,7 @@ public class MapData {
 
 			if (results.next()) {
 
-				return (new Location( Bukkit.getWorld(plugin.getConfig().getString("world")),
+				return (new Location( Bukkit.getWorld(results.getString("World")),
 						results.getDouble("X"),
 						results.getDouble("Y"),
 						results.getDouble("Z")));			

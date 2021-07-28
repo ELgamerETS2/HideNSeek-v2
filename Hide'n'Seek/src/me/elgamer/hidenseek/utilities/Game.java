@@ -21,7 +21,6 @@ import me.elgamer.hidenseek.sql.MapData;
 import me.elgamer.minigames.Main;
 import me.elgamer.minigames.sql.GameLog;
 import me.elgamer.minigames.sql.GameTable;
-import net.minecraft.server.v1_16_R3.GameTestHarnessLogger;
 
 public class Game {
 	public ArrayList<Player> players;
@@ -58,9 +57,8 @@ public class Game {
 
 	public Game(ArrayList<Player> players) { //Input to be from lobby for whatever preferences are decided
 
-		this.players = players;
+		this.players.addAll(players);
 
-		map = new Map();
 		mapID = 0;
 		bTerminate = false;
 		registered = false;
@@ -149,12 +147,8 @@ public class Game {
 					return;
 				}
 
-				//disableFlight();
+				disableFlight();
 				teleportPlayers();
-
-				//game.setTimeStart();
-				//game.storeGameInDatabase();
-				//game.selectLastInsertID();
 
 				//Actual gameplay
 				bGamePlayStarted = true;
